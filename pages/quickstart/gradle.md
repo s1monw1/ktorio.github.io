@@ -146,6 +146,47 @@ dependencies {
 
 You can now run Gradle to fetch dependencies and verify everything is set up correctly.
 
+
+## Alternative build.gradle.kts
+
+If you want to make use of the Gradle Kotlin DSL, the corresponding build.gradle.kts file should like this:
+
+```kotlin
+import org.jetbrains.kotlin.gradle.dsl.Coroutines
+
+val kotlinVersion = '{{site.kotlin_version}}'
+val ktorVersion = '{{site.ktor_version}}'
+
+plugins {
+    kotlin("jvm")
+    application
+}
+
+kotlin {
+    experimental.coroutines = Coroutines.ENABLE
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    "http://dl.bintray.com/kotlin".let {
+        maven { url = uri("$it/ktor") }
+        maven { url = uri("$it/kotlinx") }
+    }
+}
+
+dependencies {
+
+    compile(kotlin("stdlib-jre8", kotlinVersion))
+    compile("io.ktor:ktor-server-netty:$ktorVersion")
+
+    testCompile("junit:junit:4.12")
+}
+
+
+```
+
+
 ## Configure logging
 
 Ktor uses [SLF4J](https://www.slf4j.org/) for logging. If you don't add a logging provider, you will see the
